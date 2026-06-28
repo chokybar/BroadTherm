@@ -13,9 +13,7 @@ def main():
 
     action = sys.argv[1]
 
-    if action == "run":
-        run()
-    elif action == "learn":
+    if action == "learn":
         if len(sys.argv) != 3:
             print("Usage : python -m broadtherm learn <nom_commande>")
             return
@@ -32,6 +30,8 @@ def main():
             print("Usage : python -m broadtherm delete <nom_commande>")
             return
         delete(sys.argv[2])
+    elif action == "run":
+        run(quiet="--quiet" in sys.argv)
     else:
         print(f"Commande inconnue : {action}")
 

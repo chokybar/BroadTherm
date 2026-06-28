@@ -3,11 +3,14 @@ from datetime import datetime
 from .broadlink_client import BroadlinkClient
 from .command_repository import CommandRepository
 from .config import Config
+from .logger import get_logger
 from .state import StateManager
 from .thermostat import Thermostat
 
 
 def run(quiet: bool = False):
+
+    logger = get_logger()
 
     config = Config.load()
 
@@ -21,29 +24,18 @@ def run(quiet: bool = False):
     temperature = client.get_temperature()
     state = state_manager.load()
 
+    previous_temperature = state.last_temperature
+    previous_command = state.last_command
+
     decision = thermostat.decide(temperature, state)
 
-    if not quiet:
+    ir_sent = False
 
-        print(f"🌡 Température : {temperature:.1f}°C")
-        print(f"📌 Dernière commande : {state.last_command}")
-        print(f"🌡 Température précédente : {state.last_temperature}")
-        print(f"🧠 Raison : {decision.reason}")
-
-    if decision is None:
-
-        if not quiet:
-            print("✅ Aucune action nécessaire.")
-
-    else:
-
-        if not quiet:
-            print(f"🚀 Envoi de : {decision.command}")
-
+    if decision.command is not None:
         command = repository.load(decision.command)
-
         client.send(command.data)
 
+        ir_sent = True
         state.last_command = decision.command
 
     state.last_temperature = temperature
@@ -52,6 +44,14 @@ def run(quiet: bool = False):
     state_manager.save(state)
 
     if quiet:
-        print(f"{temperature:.1f}|{decision or 'none'}")
-    else:
-        print("💾 Etat sauvegardé.")
+        print(f"{temperature:.1f}°C | {decision.command or 'none'} | {decision.reason}")
+        return
+
+    logger.execution(
+        current_temperature=temperature,
+        previous_temperature=previous_temperature,
+        previous_command=previous_command,
+        decision_command=decision.command,
+        decision_reason=decision.reason,
+        ir_sent=ir_sent,
+    )

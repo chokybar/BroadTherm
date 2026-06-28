@@ -4,8 +4,8 @@ from .config import Config
 from .state import StateManager
 from .constants import VERSION
 
-
 def status():
+
     config = Config.load()
     state = StateManager().load()
     repository = CommandRepository()
@@ -24,29 +24,29 @@ def status():
     print("══════════════════════════════════")
     print(f"        BroadTherm {VERSION}")
     print("══════════════════════════════════")
-    print()
+    print("")
 
     print("📡 RM Pro")
     print(f"   {'✅ Connecté' if rm_connected else '❌ Hors ligne'}")
-    print()
+    print("")
 
     print("🌡 Température actuelle")
     if current_temperature is not None:
         print(f"   {current_temperature:.1f}°C")
     else:
         print("   Indisponible")
-    print()
+    print("")
 
     print("🎯 Thermostat")
     print(f"   ON  : {config.thermostat.temperature_on}°C")
     print(f"   OFF : {config.thermostat.temperature_off}°C")
-    print()
+    print("")
 
     print("📌 État")
     print(f"   Dernière commande     : {state.last_command}")
     print(f"   Dernière température  : {state.last_temperature}")
     print(f"   Dernière exécution    : {state.last_execution}")
-    print()
+    print("")
 
     print("📚 Commandes connues")
     commands = repository.list()
@@ -56,6 +56,6 @@ def status():
             print(f"   • {command}")
     else:
         print("   Aucune commande")
-    print()
+    print("")
 
     print("══════════════════════════════════")

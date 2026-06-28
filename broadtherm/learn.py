@@ -2,8 +2,8 @@ from .broadlink_client import BroadlinkClient
 from .command_repository import CommandRepository
 from .config import Config
 
-
 def learn(name: str):
+
     config = Config.load()
 
     client = BroadlinkClient(config.device)
