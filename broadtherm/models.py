@@ -31,3 +31,8 @@ class AppState:
     last_command: str | None
     last_temperature: float | None
     last_execution: datetime | None
+
+@dataclass
+class Decision:
+    command: str | None
+    reason: str
