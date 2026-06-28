@@ -1,18 +1,19 @@
+from .constants import TEMPERATURE_STABILITY_MARGIN
 from .models import AppConfig, AppState, Decision
 
 
 class Thermostat:
 
-    TEMPERATURE_MARGIN = 0.2
-
     def __init__(self, config: AppConfig):
         self.config = config
 
     def decide(self, temperature: float, state: AppState) -> Decision:
+
         last_command = state.last_command
         last_temperature = state.last_temperature
 
         if temperature >= self.config.thermostat.temperature_on:
+
             if last_command != "cool24":
                 return Decision(
                     command="cool24",
@@ -20,7 +21,8 @@ class Thermostat:
                 )
 
             if last_temperature is not None:
-                if temperature >= last_temperature - self.TEMPERATURE_MARGIN:
+
+                if temperature >= last_temperature - TEMPERATURE_STABILITY_MARGIN:
                     return Decision(
                         command="cool24",
                         reason="temperature_not_decreasing_resync"
@@ -32,6 +34,7 @@ class Thermostat:
             )
 
         if temperature <= self.config.thermostat.temperature_off:
+
             if last_command != "off":
                 return Decision(
                     command="off",
@@ -39,7 +42,8 @@ class Thermostat:
                 )
 
             if last_temperature is not None:
-                if temperature <= last_temperature - self.TEMPERATURE_MARGIN:
+
+                if temperature <= last_temperature - TEMPERATURE_STABILITY_MARGIN:
                     return Decision(
                         command="off",
                         reason="temperature_still_decreasing_resync"

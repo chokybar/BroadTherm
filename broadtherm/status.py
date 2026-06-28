@@ -2,6 +2,7 @@ from .broadlink_client import BroadlinkClient
 from .command_repository import CommandRepository
 from .config import Config
 from .state import StateManager
+from .constants import VERSION
 
 
 def status():
@@ -21,7 +22,7 @@ def status():
         rm_connected = False
 
     print("══════════════════════════════════")
-    print("        BroadTherm 0.1")
+    print(f"        BroadTherm {VERSION}")
     print("══════════════════════════════════")
     print()
 
