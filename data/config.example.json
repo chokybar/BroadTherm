@@ -1,0 +1,12 @@
+{
+    "device": {
+        "ip": "192.168.1.100",
+        "port": 80,
+        "mac": "001122334455",
+        "devtype": "0x272a"
+    },
+    "thermostat": {
+        "temperature_on": 27,
+        "temperature_off": 24
+    }
+}
